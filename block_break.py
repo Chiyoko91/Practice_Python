@@ -4,8 +4,9 @@ import sys
 #基本設定
 win_width = 600 #ウインドウサイズ(x)
 win_height = 480 #ウインドウサイズ(y)
-win_center_x = win_width/2 #センター
-tick = 40 #画面更新秒数(ms)
+win_center_x = win_width/2 #センター(x)
+win_center_y = win_height/2 #センター(y)
+tick = 20 #画面更新秒数(ms)
 root = tk.Tk() #ルート
 root.title("ブロック崩し") #タイトル
 root.geometry("600x480+320+90") #画面のサイズとデスクトップ上の位置
@@ -17,8 +18,8 @@ class Ball:
     x = 250 #ボールの初期位置(中心のX座標)
     y = 250 #ボールの初期位置(中心のY座標)
     w = 10 #ボールの幅(大きさ)
-    dx = 6 #フレームごとの移動量(x座標)
-    dy = 6 #フレームごとの移動量(y座標)
+    dx = 5 #フレームごとの移動量(x座標)
+    dy = 5 #フレームごとの移動量(y座標)
     color = "red" #ボールの色
     def draw(self): #描画
         cv.create_oval(self.x-self.w, self.y-self.w, self.x+self.w, self.y+self.w, fill = self.color, tag = "ball")
@@ -46,7 +47,7 @@ class Paddle:
     y = win_height - 30 #パドルの初期位置(x座標)
     wx = 45 #パドルの幅(x座標)
     wy = 8 #パドルの幅(y座標)
-    dx = 8 #パドルの移動量(y成分の変化なし)
+    dx = 10 #パドルの移動量(y成分の変化なし)
     color = "green" #パドルの色
     def draw(self): #描画
         cv.create_rectangle(self.x-self.wx,self.y-self.wy,self.x+self.wx,self.y+self.wy, fill = self.color, tag = "paddle")
@@ -66,7 +67,7 @@ class Paddle:
 
 #ブロック設定
 class Block:
-    w_x = 100 #ブロックの幅(x座標)
+    w_x =100 #ブロックの幅(x座標)
     w_y = 30 #ブロックの幅(y座標)
     global dy, score
 
@@ -91,7 +92,10 @@ class Block:
                         self.block_list[j][i] = 0 #スイッチを切る
                         score.score += 1 #加点
                         score.delete() #旧スコア削除
-                        score.draw() #新スコア生成
+                        score.draw() #新スコア生
+
+    #def resizeEvent(self,event):
+
 
 #スコア
 class Score():
@@ -107,7 +111,7 @@ def gameover():
     if ball.y + ball.w > win_height :
         cv.delete("paddle")
         cv.delete("ball")
-        cv.create_text(win_center_x, win_center_y, text = "GAME OVER", font = ('FixedSys', 90))
+        cv.create_text(win_center_x, win_center_y, text = 'GAME OVER', font = ('FixedSys', 90))
         ball.w = 0
         ball.dx = 0
         ball.dy = 0
@@ -118,7 +122,7 @@ def gameclear():
     if score.score == 18 :
         cv.delete("paddle")
         cv.delete("ball")
-        cv.create_text(win_center_x, win_center_y, text = "GAME CLEAR(^0^)", font = ('FixedSys', 90))
+        cv.create_text(win_center_x, win_center_y, text = "GAME CLEAR", font = ('FixedSys', 90))
         ball.w = 0
         ball.dx = 0
         ball.dy = 0
